@@ -28,7 +28,7 @@ type Lcproblem struct {
 
 var lcproblems []Lcproblem
 
-func write(file *os.File) error {
+func Write(file *os.File) error {
 	outstr, err := json.Marshal(lcproblems)
 	if err != nil {
 		return err
@@ -44,7 +44,7 @@ func write(file *os.File) error {
 	return err
 }
 
-func read(file *os.File) error {
+func Read(file *os.File) error {
 	bytes, err := ioutil.ReadAll(file)
 
 	if err != nil {
@@ -58,18 +58,18 @@ func read(file *os.File) error {
 	}
 
 	sort.Slice(lcproblems, func(i, j int) bool {
-		return (lcproblems[i].Added.Nanosecond() * (lcproblems[i].Difficulty + 1)) > (lcproblems[j].Added.Nanosecond() * (lcproblems[j].Difficulty + 1))
+		return (lcproblems[i].Added.Nanosecond() * (3 - lcproblems[i].Difficulty)) > (lcproblems[j].Added.Nanosecond() * (3 - lcproblems[j].Difficulty))
 	})
 
 	return nil
 }
 
-func remove(index int) {
+func Remove(index int) {
 	lcproblems[index] = lcproblems[len(lcproblems)-1]
 	lcproblems = lcproblems[:len(lcproblems)-1]
 }
 
-func parseAdd() {
+func ParseAdd() {
 	var problem Lcproblem
 	reader := bufio.NewScanner(os.Stdin)
 	fmt.Print("problem name: ")
@@ -104,7 +104,7 @@ out:
 	lcproblems = append(lcproblems, problem)
 }
 
-func printList() {
+func PrintList() {
 	fmt.Println("Problem Name            Added On      Difficulty")
 	for _, problem := range lcproblems {
 		var name string

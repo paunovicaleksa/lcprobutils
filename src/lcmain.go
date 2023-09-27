@@ -24,18 +24,29 @@ func main() {
 	}
 
 	defer file.Close()
-	defer write(file)
+	defer Write(file)
 	/* cli parsing here? */
-	read(file)
+	Read(file)
 
 	/* only one at the same time? */
 	if *addPtr {
-		parseAdd()
+		ParseAdd()
 	} else if *listPtr {
-		printList()
-	} else if *removePtr >= 0 && *removePtr < len(lcproblems) {
-		remove(*removePtr)
+		PrintList()
+	} else if isFlagPassed("remove") {
+		Remove(*removePtr)
 	} else if *interactivePtr {
 		/* TODO: tui */
 	}
+}
+
+func isFlagPassed(name string) bool {
+	found := false
+	flag.Visit(func(f *flag.Flag) {
+		if f.Name == name {
+			found = true
+		}
+	})
+
+	return found
 }
